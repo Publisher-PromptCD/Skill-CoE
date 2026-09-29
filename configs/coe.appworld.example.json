@@ -1,0 +1,53 @@
+{
+  "benchmark": "appworld",
+  "model": {
+    "base_url": "http://127.0.0.1:8000/v1",
+    "model": "YOUR_SERVED_MODEL",
+    "tokenizer_path": "PATH_TO_MATCHING_TOKENIZER",
+    "temperature": 0.7
+  },
+  "agent": {
+    "history_rounds": 10,
+    "max_rounds": 50,
+    "max_output_chars": 100000,
+    "context_tokens": 65536,
+    "output_tokens": 4096,
+    "allow_python_fence": true
+  },
+  "environment": {
+    "data_root": "PATH_TO_APPWORLD_ROOT",
+    "experiment_name": "CHOOSE_UNIQUE_EXPERIMENT_NAME",
+    "max_environment_steps": 50,
+    "max_api_calls_per_interaction": 1000,
+    "code_timeout_seconds": 60
+  },
+  "learning_model": {
+    "base_url": "http://127.0.0.1:8000/v1",
+    "model": "YOUR_SERVED_MODEL",
+    "tokenizer_path": "PATH_TO_MATCHING_TOKENIZER",
+    "temperature": 0.7
+  },
+  "workers": 8,
+  "learning": {
+    "batch_size": 12,
+    "reflection_workers": 8,
+    "context_tokens": 65536,
+    "reflection_input_tokens": 16000,
+    "curation_input_tokens": 48000,
+    "reflection_output_tokens": 3072,
+    "curation_output_tokens": 8192,
+    "playbook_tokens": 12000,
+    "format_attempts": 2
+  },
+  "coe": {
+    "inner_proposals": 3,
+    "evidence_per_role": 2,
+    "score_steps": 16,
+    "score_workers": 8,
+    "success_replay": 2,
+    "success_cache": 24,
+    "seed": 42,
+    "recombination_output_tokens": 6144,
+    "recombination_retry_tokens": 8192
+  }
+}

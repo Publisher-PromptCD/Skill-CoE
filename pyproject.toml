@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "skill-coe"
+version = "0.1.0"
+description = "Contrast-guided skill evolution for interactive agents"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+model = ["transformers>=4.45"]
+alfworld = ["alfworld==0.4.2", "PyYAML>=6"]
+scienceworld = ["scienceworld==1.2.3"]
+
+[project.scripts]
+skill-coe = "skill_coe.cli:main"
+skill-coe-train = "skill_coe.coe:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
