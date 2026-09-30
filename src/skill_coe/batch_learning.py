@@ -1,6 +1,4 @@
-"""Minimal local port of Ours-ACE's reflection -> ADD curator backend.
-No dual channels, preference scoring, validation gate, or upstream runtime imports.
-"""
+"""Batch reflection and append-only playbook updates."""
 import argparse
 import copy
 import hashlib
@@ -258,7 +256,7 @@ def update_batch(model,directories,state,output,cfg=None,seed=42,metadata=None):
             return row
         with ThreadPoolExecutor(max_workers=cfg.reflection_workers) as pool:
             reflections=list(pool.map(reflect,enumerate(episodes)))
-        # Same ACE architecture: curator reads analyses, not all raw trajectories.
+        # The curator receives analyses rather than raw trajectories.
         payload=dict(current_playbook=before,reflections=reflections)
         dump(out/'curation_input.json',payload)
         request_cfg=ExtractionConfig(context_tokens=cfg.context_tokens,format_attempts=cfg.format_attempts)

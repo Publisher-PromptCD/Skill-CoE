@@ -1,4 +1,4 @@
-"""Style adapted from official SkillOpt artifacts; see docs/skill_prompt_design.md."""
+"""Skill writing examples adapted from official SkillOpt artifacts."""
 
 SKILL_STYLE = """A Skill is reusable operational guidance for the acting agent.
 Write an applicability condition followed by concrete actions in useful order,

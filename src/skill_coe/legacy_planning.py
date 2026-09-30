@@ -1,6 +1,4 @@
-"""Planning protocol ported from experiment_framework.methods.contrast_plans.
-Only the model-client interface is adapted; no historical target enters generation.
-"""
+"""Candidate-owned planning for historical-action scoring."""
 import json
 import re
 
@@ -24,14 +22,13 @@ def parse_plan(text):
     if len(matches)==1:
         plan=matches[0][1]
     else:
-        # Observed format typo: a plan terminated by </action> before any action.
+        # Handle a mismatched closing tag before the first action.
         match=re.fullmatch(r'\s*<plan>(.*?)</action>\s*',prefix,re.S)
         if match:
             plan=match[1]
         elif ('<action' in text and prefix.strip() and len(prefix.strip())<=2000
               and not any(token in prefix for token in ('<','>','```','{','}'))):
-            # Only already-generated prose BEFORE the first action is eligible.
-            # Never reconstruct a rationale from the generated action body.
+            # Use only prose preceding the action, without inferring a plan from its body.
             plan=prefix.strip()
         else:raise ValueError('Missing complete pre-action plan')
     if not plan.strip() or '<plan' in plan or '<action' in plan:

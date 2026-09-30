@@ -1,4 +1,4 @@
-"""One synchronous episode per process; no hidden repair, retries, or knowledge updates."""
+"""ReAct execution and episode logging."""
 import json
 from .clock import elapsed_clock
 from dataclasses import asdict

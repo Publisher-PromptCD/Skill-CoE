@@ -1,1 +1,1 @@
-"""Independent Skill-CoE execution foundation."""
+"""Skill-CoE."""

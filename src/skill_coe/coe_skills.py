@@ -84,27 +84,52 @@ def generation_prompt(channel):
     raise ValueError('Unknown generation channel')
 
 
-def apply_patch(state,obj,evidence_ids):
+def normalize_patch(state,obj):
+    """Accept redundant REPLACE sections only when the existing section agrees."""
     validate_state(state)
     if not isinstance(obj,dict) or set(obj)!={'operations'} or not isinstance(obj['operations'],list):
-        raise ValueError('Expected operations')
+        raise ValueError('Expected an object containing only an operations list')
+    normalized=copy.deepcopy(obj);by_id={r['id']:r for r in state['entries']}
+    for index,op in enumerate(normalized['operations']):
+        label=f'operations[{index}]'
+        if not isinstance(op,dict):raise ValueError(label+' must be an object')
+        kind=op.get('type')
+        if kind not in ('ADD','REPLACE'):
+            raise ValueError(label+'.type must be ADD or REPLACE; received '+repr(kind))
+        if kind=='REPLACE':
+            rule_id=op.get('id')
+            if not isinstance(rule_id,str) or rule_id not in by_id:
+                raise ValueError(label+'.id must identify an existing rule; received '+repr(rule_id))
+            if 'section' in op:
+                expected=by_id[rule_id]['section']
+                if op['section']!=expected:
+                    raise ValueError(label+f' REPLACE cannot change section of {rule_id}; expected '+repr(expected))
+                del op['section']
+        keys={'type','content','evidence_ids'}|({'section'} if kind=='ADD' else {'id'})
+        missing=keys-set(op);extra=set(op)-keys
+        if missing or extra:
+            raise ValueError(label+f' {kind} invalid fields: missing={sorted(missing)}, '
+                             f'unexpected={sorted(extra)}; allowed={sorted(keys)}')
+    return normalized
+
+
+def apply_patch(state,obj,evidence_ids):
+    obj=normalize_patch(state,obj)
     candidate=copy.deepcopy(state);by_id={r['id']:r for r in candidate['entries']};touched=set()
-    for op in obj['operations']:
-        if not isinstance(op,dict):raise ValueError('Invalid operation')
-        kind=op.get('type');keys={'type','content','evidence_ids'}|({'section'} if kind=='ADD' else {'id'})
-        if kind not in ('ADD','REPLACE') or set(op)!=keys:raise ValueError('Invalid operation fields')
+    for index,op in enumerate(obj['operations']):
+        label=f'operations[{index}]';kind=op['type']
         refs=op['evidence_ids']
         if not isinstance(refs,list) or not refs or any(not isinstance(x,str) or x not in evidence_ids for x in refs):
-            raise ValueError('Unknown evidence reference')
+            raise ValueError(label+'.evidence_ids must be a nonempty list using only allowed_evidence_ids')
         content=op['content']
         if not isinstance(content,str) or not content.strip() or any(x.lstrip().startswith(('#','[rule-')) for x in content.splitlines()):
-            raise ValueError('Invalid rule content')
+            raise ValueError(label+'.content must be nonempty rule text without headings or rule ID prefixes')
         content=content.strip()
         if kind=='REPLACE':
-            if not isinstance(op['id'],str) or op['id'] not in by_id or op['id'] in touched:raise ValueError('Unknown/repeated replacement ID')
+            if op['id'] in touched:raise ValueError(label+'.id repeats an earlier REPLACE: '+op['id'])
             touched.add(op['id']);by_id[op['id']]['content']=content
         else:
-            if op['section'] not in SECTIONS:raise ValueError('Unknown section')
+            if op['section'] not in SECTIONS:raise ValueError(label+'.section must be one of '+repr(SECTIONS))
             if any(' '.join(r['content'].split()).casefold()==' '.join(content.split()).casefold() for r in candidate['entries']):continue
             entry=dict(id=f"rule-{candidate['next_id']:05d}",section=op['section'],content=content)
             candidate['entries'].append(entry);candidate['next_id']+=1

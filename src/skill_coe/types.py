@@ -14,7 +14,7 @@ class Observation:
     score: Optional[float] = None
     environment_calls: int = 0
     api_calls: int = 0
-    # Visible is public context; diagnostics must NEVER be added to prompts.
+    # Visible fields are prompt context; diagnostics are for logging only.
     visible: Dict[str, Any] = field(default_factory=dict)
     diagnostics: Dict[str, Any] = field(default_factory=dict)
 

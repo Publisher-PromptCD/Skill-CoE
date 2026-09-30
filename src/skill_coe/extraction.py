@@ -1,4 +1,4 @@
-"""Offline, evidence-linked extraction. No environment interaction or skill deployment."""
+"""Extract Skills from saved trajectories and their evidence."""
 import argparse
 import hashlib
 import json

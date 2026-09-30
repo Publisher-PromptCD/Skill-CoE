@@ -1,4 +1,4 @@
-"""Bounded, auditable views of long trajectories for offline Skill analysis.
+"""Token-bounded trajectory views for Skill analysis.
 
 Raw episode files are never changed. Every source step is inspected in an ordered
 chunk; later stages receive evidence accounts with the original step numbers.
@@ -36,7 +36,7 @@ def fits(model, payload, system, cfg, output_tokens, limit=None):
 
 
 def _fragments(step):
-    """A single giant action/observation must not defeat ordered chunking."""
+    """Split oversized action and observation fields into ordered fragments."""
     fields=('action','feedback','public_state')
     pieces={key:[step[key][i:i+1600] for i in range(0,len(step[key]),1600)]
             if isinstance(step.get(key),str) and len(step[key])>1600 else [step.get(key)]

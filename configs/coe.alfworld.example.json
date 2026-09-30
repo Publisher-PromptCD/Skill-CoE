@@ -2,12 +2,15 @@
   "benchmark": "alfworld",
   "model": {
     "base_url": "http://127.0.0.1:8000/v1",
-    "model": "YOUR_SERVED_MODEL",
+    "model": "Qwen3.8-27B",
     "tokenizer_path": "PATH_TO_MATCHING_TOKENIZER",
-    "temperature": 0.7
+    "temperature": 0,
+    "template_kwargs": {
+      "enable_thinking": false
+    }
   },
   "agent": {
-    "history_rounds": 10,
+    "history_rounds": 20,
     "max_rounds": 50,
     "max_output_chars": 100000,
     "context_tokens": 65536,
@@ -21,9 +24,12 @@
   },
   "learning_model": {
     "base_url": "http://127.0.0.1:8000/v1",
-    "model": "YOUR_SERVED_MODEL",
+    "model": "Qwen3.8-27B",
     "tokenizer_path": "PATH_TO_MATCHING_TOKENIZER",
-    "temperature": 0.7
+    "temperature": 0.7,
+    "template_kwargs": {
+      "enable_thinking": false
+    }
   },
   "workers": 8,
   "learning": {
@@ -45,7 +51,13 @@
     "success_replay": 2,
     "success_cache": 24,
     "seed": 42,
+    "recombination_workers": 4,
     "recombination_output_tokens": 6144,
-    "recombination_retry_tokens": 8192
+    "recombination_retry_tokens": 8192,
+    "plan_protocol": "legacy"
+  },
+  "evaluation": {
+    "initial_test": false,
+    "final_test": true
   }
 }

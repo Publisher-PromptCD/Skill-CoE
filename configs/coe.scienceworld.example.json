@@ -2,33 +2,45 @@
   "benchmark": "scienceworld",
   "model": {
     "base_url": "http://127.0.0.1:8000/v1",
-    "model": "YOUR_SERVED_MODEL",
+    "model": "Qwen3.8-27B",
     "tokenizer_path": "PATH_TO_MATCHING_TOKENIZER",
-    "temperature": 0.7
+    "temperature": 0.7,
+    "template_kwargs": {
+      "enable_thinking": false
+    },
+    "top_p": 0.8,
+    "top_k": 20,
+    "presence_penalty": 1.5
   },
   "agent": {
-    "history_rounds": 10,
+    "history_rounds": 20,
     "max_rounds": 50,
     "max_output_chars": 100000,
     "context_tokens": 65536,
     "output_tokens": 4096,
-    "allow_python_fence": false
+    "allow_python_fence": false,
+    "message_format": "scienceworld_chat",
+    "task_timeout_seconds": 1800
   },
   "environment": {
     "max_environment_steps": 50,
-    "simplifications": "",
-    "spatial_context": true
+    "simplifications": "easy",
+    "spatial_context": true,
+    "history_state_snapshots": true
   },
   "learning_model": {
     "base_url": "http://127.0.0.1:8000/v1",
-    "model": "YOUR_SERVED_MODEL",
+    "model": "Qwen3.8-27B",
     "tokenizer_path": "PATH_TO_MATCHING_TOKENIZER",
-    "temperature": 0.7
+    "temperature": 0.7,
+    "template_kwargs": {
+      "enable_thinking": false
+    }
   },
-  "workers": 8,
+  "workers": 9,
   "learning": {
     "batch_size": 12,
-    "reflection_workers": 8,
+    "reflection_workers": 9,
     "context_tokens": 65536,
     "reflection_input_tokens": 16000,
     "curation_input_tokens": 48000,
@@ -41,11 +53,17 @@
     "inner_proposals": 3,
     "evidence_per_role": 2,
     "score_steps": 16,
-    "score_workers": 8,
+    "score_workers": 9,
     "success_replay": 2,
     "success_cache": 24,
     "seed": 42,
+    "recombination_workers": 4,
     "recombination_output_tokens": 6144,
-    "recombination_retry_tokens": 8192
+    "recombination_retry_tokens": 8192,
+    "plan_protocol": "legacy"
+  },
+  "evaluation": {
+    "initial_test": false,
+    "final_test": true
   }
 }

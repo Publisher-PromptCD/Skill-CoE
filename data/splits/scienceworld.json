@@ -1,0 +1,1582 @@
+{
+  "batches": [
+    [
+      {
+        "task_name": "measure-melting-point-unknown-substance",
+        "variation_id": 121
+      },
+      {
+        "task_name": "inclined-plane-determine-angle",
+        "variation_id": 48
+      },
+      {
+        "task_name": "boil",
+        "variation_id": 9
+      },
+      {
+        "task_name": "identify-life-stages-1",
+        "variation_id": 3
+      },
+      {
+        "task_name": "melt",
+        "variation_id": 13
+      },
+      {
+        "task_name": "find-plant",
+        "variation_id": 35
+      },
+      {
+        "task_name": "test-conductivity-of-unknown-substances",
+        "variation_id": 100
+      },
+      {
+        "task_name": "chemistry-mix-paint-tertiary-color",
+        "variation_id": 15
+      },
+      {
+        "task_name": "find-non-living-thing",
+        "variation_id": 112
+      },
+      {
+        "task_name": "mendelian-genetics-known-plant",
+        "variation_id": 59
+      },
+      {
+        "task_name": "mendelian-genetics-unknown-plant",
+        "variation_id": 135
+      },
+      {
+        "task_name": "test-conductivity",
+        "variation_id": 330
+      }
+    ],
+    [
+      {
+        "task_name": "lifespan-longest-lived-then-shortest-lived",
+        "variation_id": 1
+      },
+      {
+        "task_name": "chemistry-mix",
+        "variation_id": 0
+      },
+      {
+        "task_name": "identify-life-stages-2",
+        "variation_id": 1
+      },
+      {
+        "task_name": "power-component",
+        "variation_id": 1
+      },
+      {
+        "task_name": "grow-plant",
+        "variation_id": 44
+      },
+      {
+        "task_name": "grow-fruit",
+        "variation_id": 41
+      },
+      {
+        "task_name": "inclined-plane-friction-named-surfaces",
+        "variation_id": 335
+      },
+      {
+        "task_name": "lifespan-shortest-lived",
+        "variation_id": 21
+      },
+      {
+        "task_name": "chemistry-mix-paint-secondary-color",
+        "variation_id": 8
+      },
+      {
+        "task_name": "use-thermometer",
+        "variation_id": 124
+      },
+      {
+        "task_name": "find-living-thing",
+        "variation_id": 76
+      },
+      {
+        "task_name": "freeze",
+        "variation_id": 2
+      }
+    ],
+    [
+      {
+        "task_name": "power-component-renewable-vs-nonrenewable-energy",
+        "variation_id": 8
+      },
+      {
+        "task_name": "measure-melting-point-known-substance",
+        "variation_id": 215
+      },
+      {
+        "task_name": "lifespan-longest-lived",
+        "variation_id": 27
+      },
+      {
+        "task_name": "change-the-state-of-matter-of",
+        "variation_id": 3
+      },
+      {
+        "task_name": "find-animal",
+        "variation_id": 76
+      },
+      {
+        "task_name": "inclined-plane-friction-unnamed-surfaces",
+        "variation_id": 66
+      },
+      {
+        "task_name": "grow-fruit",
+        "variation_id": 43
+      },
+      {
+        "task_name": "power-component",
+        "variation_id": 6
+      },
+      {
+        "task_name": "test-conductivity",
+        "variation_id": 425
+      },
+      {
+        "task_name": "chemistry-mix-paint-secondary-color",
+        "variation_id": 0
+      },
+      {
+        "task_name": "measure-melting-point-unknown-substance",
+        "variation_id": 146
+      },
+      {
+        "task_name": "grow-plant",
+        "variation_id": 34
+      }
+    ],
+    [
+      {
+        "task_name": "find-animal",
+        "variation_id": 81
+      },
+      {
+        "task_name": "lifespan-longest-lived",
+        "variation_id": 50
+      },
+      {
+        "task_name": "measure-melting-point-known-substance",
+        "variation_id": 169
+      },
+      {
+        "task_name": "melt",
+        "variation_id": 6
+      },
+      {
+        "task_name": "lifespan-longest-lived-then-shortest-lived",
+        "variation_id": 18
+      },
+      {
+        "task_name": "change-the-state-of-matter-of",
+        "variation_id": 12
+      },
+      {
+        "task_name": "identify-life-stages-1",
+        "variation_id": 0
+      },
+      {
+        "task_name": "freeze",
+        "variation_id": 0
+      },
+      {
+        "task_name": "test-conductivity-of-unknown-substances",
+        "variation_id": 201
+      },
+      {
+        "task_name": "inclined-plane-determine-angle",
+        "variation_id": 79
+      },
+      {
+        "task_name": "power-component-renewable-vs-nonrenewable-energy",
+        "variation_id": 7
+      },
+      {
+        "task_name": "lifespan-shortest-lived",
+        "variation_id": 18
+      }
+    ],
+    [
+      {
+        "task_name": "mendelian-genetics-unknown-plant",
+        "variation_id": 11
+      },
+      {
+        "task_name": "use-thermometer",
+        "variation_id": 198
+      },
+      {
+        "task_name": "boil",
+        "variation_id": 7
+      },
+      {
+        "task_name": "chemistry-mix-paint-tertiary-color",
+        "variation_id": 16
+      },
+      {
+        "task_name": "chemistry-mix",
+        "variation_id": 9
+      },
+      {
+        "task_name": "mendelian-genetics-known-plant",
+        "variation_id": 11
+      },
+      {
+        "task_name": "inclined-plane-friction-named-surfaces",
+        "variation_id": 422
+      },
+      {
+        "task_name": "find-living-thing",
+        "variation_id": 29
+      },
+      {
+        "task_name": "find-plant",
+        "variation_id": 82
+      },
+      {
+        "task_name": "identify-life-stages-2",
+        "variation_id": 3
+      },
+      {
+        "task_name": "find-non-living-thing",
+        "variation_id": 29
+      },
+      {
+        "task_name": "inclined-plane-friction-unnamed-surfaces",
+        "variation_id": 36
+      }
+    ]
+  ],
+  "validation": [
+    {
+      "task_name": "boil",
+      "variation_id": 14
+    },
+    {
+      "task_name": "boil",
+      "variation_id": 17
+    },
+    {
+      "task_name": "change-the-state-of-matter-of",
+      "variation_id": 15
+    },
+    {
+      "task_name": "change-the-state-of-matter-of",
+      "variation_id": 17
+    },
+    {
+      "task_name": "chemistry-mix-paint-secondary-color",
+      "variation_id": 22
+    },
+    {
+      "task_name": "chemistry-mix-paint-secondary-color",
+      "variation_id": 23
+    },
+    {
+      "task_name": "chemistry-mix-paint-tertiary-color",
+      "variation_id": 20
+    },
+    {
+      "task_name": "chemistry-mix-paint-tertiary-color",
+      "variation_id": 26
+    },
+    {
+      "task_name": "chemistry-mix",
+      "variation_id": 18
+    },
+    {
+      "task_name": "chemistry-mix",
+      "variation_id": 19
+    },
+    {
+      "task_name": "find-animal",
+      "variation_id": 162
+    },
+    {
+      "task_name": "find-animal",
+      "variation_id": 203
+    },
+    {
+      "task_name": "find-living-thing",
+      "variation_id": 153
+    },
+    {
+      "task_name": "find-living-thing",
+      "variation_id": 202
+    },
+    {
+      "task_name": "find-non-living-thing",
+      "variation_id": 162
+    },
+    {
+      "task_name": "find-non-living-thing",
+      "variation_id": 177
+    },
+    {
+      "task_name": "find-plant",
+      "variation_id": 179
+    },
+    {
+      "task_name": "find-plant",
+      "variation_id": 197
+    },
+    {
+      "task_name": "freeze",
+      "variation_id": 16
+    },
+    {
+      "task_name": "freeze",
+      "variation_id": 19
+    },
+    {
+      "task_name": "grow-fruit",
+      "variation_id": 64
+    },
+    {
+      "task_name": "grow-fruit",
+      "variation_id": 79
+    },
+    {
+      "task_name": "grow-plant",
+      "variation_id": 85
+    },
+    {
+      "task_name": "grow-plant",
+      "variation_id": 89
+    },
+    {
+      "task_name": "identify-life-stages-1",
+      "variation_id": 6
+    },
+    {
+      "task_name": "identify-life-stages-1",
+      "variation_id": 7
+    },
+    {
+      "task_name": "identify-life-stages-2",
+      "variation_id": 4
+    },
+    {
+      "task_name": "identify-life-stages-2",
+      "variation_id": 5
+    },
+    {
+      "task_name": "inclined-plane-determine-angle",
+      "variation_id": 100
+    },
+    {
+      "task_name": "inclined-plane-determine-angle",
+      "variation_id": 105
+    },
+    {
+      "task_name": "inclined-plane-friction-named-surfaces",
+      "variation_id": 743
+    },
+    {
+      "task_name": "inclined-plane-friction-named-surfaces",
+      "variation_id": 895
+    },
+    {
+      "task_name": "inclined-plane-friction-unnamed-surfaces",
+      "variation_id": 113
+    },
+    {
+      "task_name": "inclined-plane-friction-unnamed-surfaces",
+      "variation_id": 96
+    },
+    {
+      "task_name": "lifespan-longest-lived-then-shortest-lived",
+      "variation_id": 69
+    },
+    {
+      "task_name": "lifespan-longest-lived-then-shortest-lived",
+      "variation_id": 76
+    },
+    {
+      "task_name": "lifespan-longest-lived",
+      "variation_id": 71
+    },
+    {
+      "task_name": "lifespan-longest-lived",
+      "variation_id": 87
+    },
+    {
+      "task_name": "lifespan-shortest-lived",
+      "variation_id": 65
+    },
+    {
+      "task_name": "lifespan-shortest-lived",
+      "variation_id": 91
+    },
+    {
+      "task_name": "measure-melting-point-known-substance",
+      "variation_id": 249
+    },
+    {
+      "task_name": "measure-melting-point-known-substance",
+      "variation_id": 280
+    },
+    {
+      "task_name": "measure-melting-point-unknown-substance",
+      "variation_id": 213
+    },
+    {
+      "task_name": "measure-melting-point-unknown-substance",
+      "variation_id": 220
+    },
+    {
+      "task_name": "melt",
+      "variation_id": 18
+    },
+    {
+      "task_name": "melt",
+      "variation_id": 19
+    },
+    {
+      "task_name": "mendelian-genetics-known-plant",
+      "variation_id": 73
+    },
+    {
+      "task_name": "mendelian-genetics-known-plant",
+      "variation_id": 78
+    },
+    {
+      "task_name": "mendelian-genetics-unknown-plant",
+      "variation_id": 268
+    },
+    {
+      "task_name": "mendelian-genetics-unknown-plant",
+      "variation_id": 308
+    },
+    {
+      "task_name": "power-component-renewable-vs-nonrenewable-energy",
+      "variation_id": 10
+    },
+    {
+      "task_name": "power-component-renewable-vs-nonrenewable-energy",
+      "variation_id": 13
+    },
+    {
+      "task_name": "power-component",
+      "variation_id": 12
+    },
+    {
+      "task_name": "power-component",
+      "variation_id": 14
+    },
+    {
+      "task_name": "test-conductivity-of-unknown-substances",
+      "variation_id": 336
+    },
+    {
+      "task_name": "test-conductivity-of-unknown-substances",
+      "variation_id": 382
+    },
+    {
+      "task_name": "test-conductivity",
+      "variation_id": 465
+    },
+    {
+      "task_name": "test-conductivity",
+      "variation_id": 478
+    },
+    {
+      "task_name": "use-thermometer",
+      "variation_id": 281
+    },
+    {
+      "task_name": "use-thermometer",
+      "variation_id": 364
+    }
+  ],
+  "test": [
+    {
+      "task_name": "boil",
+      "variation_id": 21
+    },
+    {
+      "task_name": "boil",
+      "variation_id": 22
+    },
+    {
+      "task_name": "boil",
+      "variation_id": 23
+    },
+    {
+      "task_name": "boil",
+      "variation_id": 24
+    },
+    {
+      "task_name": "boil",
+      "variation_id": 25
+    },
+    {
+      "task_name": "boil",
+      "variation_id": 26
+    },
+    {
+      "task_name": "boil",
+      "variation_id": 27
+    },
+    {
+      "task_name": "boil",
+      "variation_id": 28
+    },
+    {
+      "task_name": "boil",
+      "variation_id": 29
+    },
+    {
+      "task_name": "change-the-state-of-matter-of",
+      "variation_id": 21
+    },
+    {
+      "task_name": "change-the-state-of-matter-of",
+      "variation_id": 22
+    },
+    {
+      "task_name": "change-the-state-of-matter-of",
+      "variation_id": 23
+    },
+    {
+      "task_name": "change-the-state-of-matter-of",
+      "variation_id": 24
+    },
+    {
+      "task_name": "change-the-state-of-matter-of",
+      "variation_id": 25
+    },
+    {
+      "task_name": "change-the-state-of-matter-of",
+      "variation_id": 26
+    },
+    {
+      "task_name": "change-the-state-of-matter-of",
+      "variation_id": 27
+    },
+    {
+      "task_name": "change-the-state-of-matter-of",
+      "variation_id": 28
+    },
+    {
+      "task_name": "change-the-state-of-matter-of",
+      "variation_id": 29
+    },
+    {
+      "task_name": "chemistry-mix-paint-secondary-color",
+      "variation_id": 27
+    },
+    {
+      "task_name": "chemistry-mix-paint-secondary-color",
+      "variation_id": 28
+    },
+    {
+      "task_name": "chemistry-mix-paint-secondary-color",
+      "variation_id": 29
+    },
+    {
+      "task_name": "chemistry-mix-paint-secondary-color",
+      "variation_id": 30
+    },
+    {
+      "task_name": "chemistry-mix-paint-secondary-color",
+      "variation_id": 31
+    },
+    {
+      "task_name": "chemistry-mix-paint-secondary-color",
+      "variation_id": 32
+    },
+    {
+      "task_name": "chemistry-mix-paint-secondary-color",
+      "variation_id": 33
+    },
+    {
+      "task_name": "chemistry-mix-paint-secondary-color",
+      "variation_id": 34
+    },
+    {
+      "task_name": "chemistry-mix-paint-secondary-color",
+      "variation_id": 35
+    },
+    {
+      "task_name": "chemistry-mix-paint-tertiary-color",
+      "variation_id": 27
+    },
+    {
+      "task_name": "chemistry-mix-paint-tertiary-color",
+      "variation_id": 28
+    },
+    {
+      "task_name": "chemistry-mix-paint-tertiary-color",
+      "variation_id": 29
+    },
+    {
+      "task_name": "chemistry-mix-paint-tertiary-color",
+      "variation_id": 30
+    },
+    {
+      "task_name": "chemistry-mix-paint-tertiary-color",
+      "variation_id": 31
+    },
+    {
+      "task_name": "chemistry-mix-paint-tertiary-color",
+      "variation_id": 32
+    },
+    {
+      "task_name": "chemistry-mix-paint-tertiary-color",
+      "variation_id": 33
+    },
+    {
+      "task_name": "chemistry-mix-paint-tertiary-color",
+      "variation_id": 34
+    },
+    {
+      "task_name": "chemistry-mix-paint-tertiary-color",
+      "variation_id": 35
+    },
+    {
+      "task_name": "chemistry-mix",
+      "variation_id": 24
+    },
+    {
+      "task_name": "chemistry-mix",
+      "variation_id": 25
+    },
+    {
+      "task_name": "chemistry-mix",
+      "variation_id": 26
+    },
+    {
+      "task_name": "chemistry-mix",
+      "variation_id": 27
+    },
+    {
+      "task_name": "chemistry-mix",
+      "variation_id": 28
+    },
+    {
+      "task_name": "chemistry-mix",
+      "variation_id": 29
+    },
+    {
+      "task_name": "chemistry-mix",
+      "variation_id": 30
+    },
+    {
+      "task_name": "chemistry-mix",
+      "variation_id": 31
+    },
+    {
+      "task_name": "find-animal",
+      "variation_id": 225
+    },
+    {
+      "task_name": "find-animal",
+      "variation_id": 226
+    },
+    {
+      "task_name": "find-animal",
+      "variation_id": 227
+    },
+    {
+      "task_name": "find-animal",
+      "variation_id": 228
+    },
+    {
+      "task_name": "find-animal",
+      "variation_id": 229
+    },
+    {
+      "task_name": "find-animal",
+      "variation_id": 230
+    },
+    {
+      "task_name": "find-animal",
+      "variation_id": 231
+    },
+    {
+      "task_name": "find-animal",
+      "variation_id": 232
+    },
+    {
+      "task_name": "find-animal",
+      "variation_id": 233
+    },
+    {
+      "task_name": "find-animal",
+      "variation_id": 234
+    },
+    {
+      "task_name": "find-living-thing",
+      "variation_id": 225
+    },
+    {
+      "task_name": "find-living-thing",
+      "variation_id": 226
+    },
+    {
+      "task_name": "find-living-thing",
+      "variation_id": 227
+    },
+    {
+      "task_name": "find-living-thing",
+      "variation_id": 228
+    },
+    {
+      "task_name": "find-living-thing",
+      "variation_id": 229
+    },
+    {
+      "task_name": "find-living-thing",
+      "variation_id": 230
+    },
+    {
+      "task_name": "find-living-thing",
+      "variation_id": 231
+    },
+    {
+      "task_name": "find-living-thing",
+      "variation_id": 232
+    },
+    {
+      "task_name": "find-living-thing",
+      "variation_id": 233
+    },
+    {
+      "task_name": "find-living-thing",
+      "variation_id": 234
+    },
+    {
+      "task_name": "find-non-living-thing",
+      "variation_id": 225
+    },
+    {
+      "task_name": "find-non-living-thing",
+      "variation_id": 226
+    },
+    {
+      "task_name": "find-non-living-thing",
+      "variation_id": 227
+    },
+    {
+      "task_name": "find-non-living-thing",
+      "variation_id": 228
+    },
+    {
+      "task_name": "find-non-living-thing",
+      "variation_id": 229
+    },
+    {
+      "task_name": "find-non-living-thing",
+      "variation_id": 230
+    },
+    {
+      "task_name": "find-non-living-thing",
+      "variation_id": 231
+    },
+    {
+      "task_name": "find-non-living-thing",
+      "variation_id": 232
+    },
+    {
+      "task_name": "find-non-living-thing",
+      "variation_id": 233
+    },
+    {
+      "task_name": "find-non-living-thing",
+      "variation_id": 234
+    },
+    {
+      "task_name": "find-plant",
+      "variation_id": 225
+    },
+    {
+      "task_name": "find-plant",
+      "variation_id": 226
+    },
+    {
+      "task_name": "find-plant",
+      "variation_id": 227
+    },
+    {
+      "task_name": "find-plant",
+      "variation_id": 228
+    },
+    {
+      "task_name": "find-plant",
+      "variation_id": 229
+    },
+    {
+      "task_name": "find-plant",
+      "variation_id": 230
+    },
+    {
+      "task_name": "find-plant",
+      "variation_id": 231
+    },
+    {
+      "task_name": "find-plant",
+      "variation_id": 232
+    },
+    {
+      "task_name": "find-plant",
+      "variation_id": 233
+    },
+    {
+      "task_name": "find-plant",
+      "variation_id": 234
+    },
+    {
+      "task_name": "freeze",
+      "variation_id": 21
+    },
+    {
+      "task_name": "freeze",
+      "variation_id": 22
+    },
+    {
+      "task_name": "freeze",
+      "variation_id": 23
+    },
+    {
+      "task_name": "freeze",
+      "variation_id": 24
+    },
+    {
+      "task_name": "freeze",
+      "variation_id": 25
+    },
+    {
+      "task_name": "freeze",
+      "variation_id": 26
+    },
+    {
+      "task_name": "freeze",
+      "variation_id": 27
+    },
+    {
+      "task_name": "freeze",
+      "variation_id": 28
+    },
+    {
+      "task_name": "freeze",
+      "variation_id": 29
+    },
+    {
+      "task_name": "grow-fruit",
+      "variation_id": 100
+    },
+    {
+      "task_name": "grow-fruit",
+      "variation_id": 101
+    },
+    {
+      "task_name": "grow-fruit",
+      "variation_id": 102
+    },
+    {
+      "task_name": "grow-fruit",
+      "variation_id": 93
+    },
+    {
+      "task_name": "grow-fruit",
+      "variation_id": 94
+    },
+    {
+      "task_name": "grow-fruit",
+      "variation_id": 95
+    },
+    {
+      "task_name": "grow-fruit",
+      "variation_id": 96
+    },
+    {
+      "task_name": "grow-fruit",
+      "variation_id": 97
+    },
+    {
+      "task_name": "grow-fruit",
+      "variation_id": 98
+    },
+    {
+      "task_name": "grow-fruit",
+      "variation_id": 99
+    },
+    {
+      "task_name": "grow-plant",
+      "variation_id": 100
+    },
+    {
+      "task_name": "grow-plant",
+      "variation_id": 101
+    },
+    {
+      "task_name": "grow-plant",
+      "variation_id": 102
+    },
+    {
+      "task_name": "grow-plant",
+      "variation_id": 93
+    },
+    {
+      "task_name": "grow-plant",
+      "variation_id": 94
+    },
+    {
+      "task_name": "grow-plant",
+      "variation_id": 95
+    },
+    {
+      "task_name": "grow-plant",
+      "variation_id": 96
+    },
+    {
+      "task_name": "grow-plant",
+      "variation_id": 97
+    },
+    {
+      "task_name": "grow-plant",
+      "variation_id": 98
+    },
+    {
+      "task_name": "grow-plant",
+      "variation_id": 99
+    },
+    {
+      "task_name": "identify-life-stages-1",
+      "variation_id": 10
+    },
+    {
+      "task_name": "identify-life-stages-1",
+      "variation_id": 11
+    },
+    {
+      "task_name": "identify-life-stages-1",
+      "variation_id": 12
+    },
+    {
+      "task_name": "identify-life-stages-1",
+      "variation_id": 13
+    },
+    {
+      "task_name": "identify-life-stages-1",
+      "variation_id": 9
+    },
+    {
+      "task_name": "identify-life-stages-2",
+      "variation_id": 6
+    },
+    {
+      "task_name": "identify-life-stages-2",
+      "variation_id": 7
+    },
+    {
+      "task_name": "identify-life-stages-2",
+      "variation_id": 8
+    },
+    {
+      "task_name": "identify-life-stages-2",
+      "variation_id": 9
+    },
+    {
+      "task_name": "inclined-plane-determine-angle",
+      "variation_id": 126
+    },
+    {
+      "task_name": "inclined-plane-determine-angle",
+      "variation_id": 127
+    },
+    {
+      "task_name": "inclined-plane-determine-angle",
+      "variation_id": 128
+    },
+    {
+      "task_name": "inclined-plane-determine-angle",
+      "variation_id": 129
+    },
+    {
+      "task_name": "inclined-plane-determine-angle",
+      "variation_id": 130
+    },
+    {
+      "task_name": "inclined-plane-determine-angle",
+      "variation_id": 131
+    },
+    {
+      "task_name": "inclined-plane-determine-angle",
+      "variation_id": 132
+    },
+    {
+      "task_name": "inclined-plane-determine-angle",
+      "variation_id": 133
+    },
+    {
+      "task_name": "inclined-plane-determine-angle",
+      "variation_id": 134
+    },
+    {
+      "task_name": "inclined-plane-determine-angle",
+      "variation_id": 135
+    },
+    {
+      "task_name": "inclined-plane-friction-named-surfaces",
+      "variation_id": 1038
+    },
+    {
+      "task_name": "inclined-plane-friction-named-surfaces",
+      "variation_id": 1039
+    },
+    {
+      "task_name": "inclined-plane-friction-named-surfaces",
+      "variation_id": 1040
+    },
+    {
+      "task_name": "inclined-plane-friction-named-surfaces",
+      "variation_id": 1041
+    },
+    {
+      "task_name": "inclined-plane-friction-named-surfaces",
+      "variation_id": 1042
+    },
+    {
+      "task_name": "inclined-plane-friction-named-surfaces",
+      "variation_id": 1043
+    },
+    {
+      "task_name": "inclined-plane-friction-named-surfaces",
+      "variation_id": 1044
+    },
+    {
+      "task_name": "inclined-plane-friction-named-surfaces",
+      "variation_id": 1045
+    },
+    {
+      "task_name": "inclined-plane-friction-named-surfaces",
+      "variation_id": 1046
+    },
+    {
+      "task_name": "inclined-plane-friction-named-surfaces",
+      "variation_id": 1047
+    },
+    {
+      "task_name": "inclined-plane-friction-unnamed-surfaces",
+      "variation_id": 120
+    },
+    {
+      "task_name": "inclined-plane-friction-unnamed-surfaces",
+      "variation_id": 121
+    },
+    {
+      "task_name": "inclined-plane-friction-unnamed-surfaces",
+      "variation_id": 122
+    },
+    {
+      "task_name": "inclined-plane-friction-unnamed-surfaces",
+      "variation_id": 123
+    },
+    {
+      "task_name": "inclined-plane-friction-unnamed-surfaces",
+      "variation_id": 124
+    },
+    {
+      "task_name": "inclined-plane-friction-unnamed-surfaces",
+      "variation_id": 125
+    },
+    {
+      "task_name": "inclined-plane-friction-unnamed-surfaces",
+      "variation_id": 126
+    },
+    {
+      "task_name": "inclined-plane-friction-unnamed-surfaces",
+      "variation_id": 127
+    },
+    {
+      "task_name": "inclined-plane-friction-unnamed-surfaces",
+      "variation_id": 128
+    },
+    {
+      "task_name": "inclined-plane-friction-unnamed-surfaces",
+      "variation_id": 129
+    },
+    {
+      "task_name": "lifespan-longest-lived-then-shortest-lived",
+      "variation_id": 100
+    },
+    {
+      "task_name": "lifespan-longest-lived-then-shortest-lived",
+      "variation_id": 101
+    },
+    {
+      "task_name": "lifespan-longest-lived-then-shortest-lived",
+      "variation_id": 102
+    },
+    {
+      "task_name": "lifespan-longest-lived-then-shortest-lived",
+      "variation_id": 93
+    },
+    {
+      "task_name": "lifespan-longest-lived-then-shortest-lived",
+      "variation_id": 94
+    },
+    {
+      "task_name": "lifespan-longest-lived-then-shortest-lived",
+      "variation_id": 95
+    },
+    {
+      "task_name": "lifespan-longest-lived-then-shortest-lived",
+      "variation_id": 96
+    },
+    {
+      "task_name": "lifespan-longest-lived-then-shortest-lived",
+      "variation_id": 97
+    },
+    {
+      "task_name": "lifespan-longest-lived-then-shortest-lived",
+      "variation_id": 98
+    },
+    {
+      "task_name": "lifespan-longest-lived-then-shortest-lived",
+      "variation_id": 99
+    },
+    {
+      "task_name": "lifespan-longest-lived",
+      "variation_id": 100
+    },
+    {
+      "task_name": "lifespan-longest-lived",
+      "variation_id": 101
+    },
+    {
+      "task_name": "lifespan-longest-lived",
+      "variation_id": 102
+    },
+    {
+      "task_name": "lifespan-longest-lived",
+      "variation_id": 93
+    },
+    {
+      "task_name": "lifespan-longest-lived",
+      "variation_id": 94
+    },
+    {
+      "task_name": "lifespan-longest-lived",
+      "variation_id": 95
+    },
+    {
+      "task_name": "lifespan-longest-lived",
+      "variation_id": 96
+    },
+    {
+      "task_name": "lifespan-longest-lived",
+      "variation_id": 97
+    },
+    {
+      "task_name": "lifespan-longest-lived",
+      "variation_id": 98
+    },
+    {
+      "task_name": "lifespan-longest-lived",
+      "variation_id": 99
+    },
+    {
+      "task_name": "lifespan-shortest-lived",
+      "variation_id": 100
+    },
+    {
+      "task_name": "lifespan-shortest-lived",
+      "variation_id": 101
+    },
+    {
+      "task_name": "lifespan-shortest-lived",
+      "variation_id": 102
+    },
+    {
+      "task_name": "lifespan-shortest-lived",
+      "variation_id": 93
+    },
+    {
+      "task_name": "lifespan-shortest-lived",
+      "variation_id": 94
+    },
+    {
+      "task_name": "lifespan-shortest-lived",
+      "variation_id": 95
+    },
+    {
+      "task_name": "lifespan-shortest-lived",
+      "variation_id": 96
+    },
+    {
+      "task_name": "lifespan-shortest-lived",
+      "variation_id": 97
+    },
+    {
+      "task_name": "lifespan-shortest-lived",
+      "variation_id": 98
+    },
+    {
+      "task_name": "lifespan-shortest-lived",
+      "variation_id": 99
+    },
+    {
+      "task_name": "measure-melting-point-known-substance",
+      "variation_id": 327
+    },
+    {
+      "task_name": "measure-melting-point-known-substance",
+      "variation_id": 328
+    },
+    {
+      "task_name": "measure-melting-point-known-substance",
+      "variation_id": 329
+    },
+    {
+      "task_name": "measure-melting-point-known-substance",
+      "variation_id": 330
+    },
+    {
+      "task_name": "measure-melting-point-known-substance",
+      "variation_id": 331
+    },
+    {
+      "task_name": "measure-melting-point-known-substance",
+      "variation_id": 332
+    },
+    {
+      "task_name": "measure-melting-point-known-substance",
+      "variation_id": 333
+    },
+    {
+      "task_name": "measure-melting-point-known-substance",
+      "variation_id": 334
+    },
+    {
+      "task_name": "measure-melting-point-known-substance",
+      "variation_id": 335
+    },
+    {
+      "task_name": "measure-melting-point-known-substance",
+      "variation_id": 336
+    },
+    {
+      "task_name": "measure-melting-point-unknown-substance",
+      "variation_id": 225
+    },
+    {
+      "task_name": "measure-melting-point-unknown-substance",
+      "variation_id": 226
+    },
+    {
+      "task_name": "measure-melting-point-unknown-substance",
+      "variation_id": 227
+    },
+    {
+      "task_name": "measure-melting-point-unknown-substance",
+      "variation_id": 228
+    },
+    {
+      "task_name": "measure-melting-point-unknown-substance",
+      "variation_id": 229
+    },
+    {
+      "task_name": "measure-melting-point-unknown-substance",
+      "variation_id": 230
+    },
+    {
+      "task_name": "measure-melting-point-unknown-substance",
+      "variation_id": 231
+    },
+    {
+      "task_name": "measure-melting-point-unknown-substance",
+      "variation_id": 232
+    },
+    {
+      "task_name": "measure-melting-point-unknown-substance",
+      "variation_id": 233
+    },
+    {
+      "task_name": "measure-melting-point-unknown-substance",
+      "variation_id": 234
+    },
+    {
+      "task_name": "melt",
+      "variation_id": 21
+    },
+    {
+      "task_name": "melt",
+      "variation_id": 22
+    },
+    {
+      "task_name": "melt",
+      "variation_id": 23
+    },
+    {
+      "task_name": "melt",
+      "variation_id": 24
+    },
+    {
+      "task_name": "melt",
+      "variation_id": 25
+    },
+    {
+      "task_name": "melt",
+      "variation_id": 26
+    },
+    {
+      "task_name": "melt",
+      "variation_id": 27
+    },
+    {
+      "task_name": "melt",
+      "variation_id": 28
+    },
+    {
+      "task_name": "melt",
+      "variation_id": 29
+    },
+    {
+      "task_name": "mendelian-genetics-known-plant",
+      "variation_id": 90
+    },
+    {
+      "task_name": "mendelian-genetics-known-plant",
+      "variation_id": 91
+    },
+    {
+      "task_name": "mendelian-genetics-known-plant",
+      "variation_id": 92
+    },
+    {
+      "task_name": "mendelian-genetics-known-plant",
+      "variation_id": 93
+    },
+    {
+      "task_name": "mendelian-genetics-known-plant",
+      "variation_id": 94
+    },
+    {
+      "task_name": "mendelian-genetics-known-plant",
+      "variation_id": 95
+    },
+    {
+      "task_name": "mendelian-genetics-known-plant",
+      "variation_id": 96
+    },
+    {
+      "task_name": "mendelian-genetics-known-plant",
+      "variation_id": 97
+    },
+    {
+      "task_name": "mendelian-genetics-known-plant",
+      "variation_id": 98
+    },
+    {
+      "task_name": "mendelian-genetics-known-plant",
+      "variation_id": 99
+    },
+    {
+      "task_name": "mendelian-genetics-unknown-plant",
+      "variation_id": 360
+    },
+    {
+      "task_name": "mendelian-genetics-unknown-plant",
+      "variation_id": 361
+    },
+    {
+      "task_name": "mendelian-genetics-unknown-plant",
+      "variation_id": 362
+    },
+    {
+      "task_name": "mendelian-genetics-unknown-plant",
+      "variation_id": 363
+    },
+    {
+      "task_name": "mendelian-genetics-unknown-plant",
+      "variation_id": 364
+    },
+    {
+      "task_name": "mendelian-genetics-unknown-plant",
+      "variation_id": 365
+    },
+    {
+      "task_name": "mendelian-genetics-unknown-plant",
+      "variation_id": 366
+    },
+    {
+      "task_name": "mendelian-genetics-unknown-plant",
+      "variation_id": 367
+    },
+    {
+      "task_name": "mendelian-genetics-unknown-plant",
+      "variation_id": 368
+    },
+    {
+      "task_name": "mendelian-genetics-unknown-plant",
+      "variation_id": 369
+    },
+    {
+      "task_name": "power-component-renewable-vs-nonrenewable-energy",
+      "variation_id": 15
+    },
+    {
+      "task_name": "power-component-renewable-vs-nonrenewable-energy",
+      "variation_id": 16
+    },
+    {
+      "task_name": "power-component-renewable-vs-nonrenewable-energy",
+      "variation_id": 17
+    },
+    {
+      "task_name": "power-component-renewable-vs-nonrenewable-energy",
+      "variation_id": 18
+    },
+    {
+      "task_name": "power-component-renewable-vs-nonrenewable-energy",
+      "variation_id": 19
+    },
+    {
+      "task_name": "power-component",
+      "variation_id": 15
+    },
+    {
+      "task_name": "power-component",
+      "variation_id": 16
+    },
+    {
+      "task_name": "power-component",
+      "variation_id": 17
+    },
+    {
+      "task_name": "power-component",
+      "variation_id": 18
+    },
+    {
+      "task_name": "power-component",
+      "variation_id": 19
+    },
+    {
+      "task_name": "test-conductivity-of-unknown-substances",
+      "variation_id": 450
+    },
+    {
+      "task_name": "test-conductivity-of-unknown-substances",
+      "variation_id": 451
+    },
+    {
+      "task_name": "test-conductivity-of-unknown-substances",
+      "variation_id": 452
+    },
+    {
+      "task_name": "test-conductivity-of-unknown-substances",
+      "variation_id": 453
+    },
+    {
+      "task_name": "test-conductivity-of-unknown-substances",
+      "variation_id": 454
+    },
+    {
+      "task_name": "test-conductivity-of-unknown-substances",
+      "variation_id": 455
+    },
+    {
+      "task_name": "test-conductivity-of-unknown-substances",
+      "variation_id": 456
+    },
+    {
+      "task_name": "test-conductivity-of-unknown-substances",
+      "variation_id": 457
+    },
+    {
+      "task_name": "test-conductivity-of-unknown-substances",
+      "variation_id": 458
+    },
+    {
+      "task_name": "test-conductivity-of-unknown-substances",
+      "variation_id": 459
+    },
+    {
+      "task_name": "test-conductivity",
+      "variation_id": 675
+    },
+    {
+      "task_name": "test-conductivity",
+      "variation_id": 676
+    },
+    {
+      "task_name": "test-conductivity",
+      "variation_id": 677
+    },
+    {
+      "task_name": "test-conductivity",
+      "variation_id": 678
+    },
+    {
+      "task_name": "test-conductivity",
+      "variation_id": 679
+    },
+    {
+      "task_name": "test-conductivity",
+      "variation_id": 680
+    },
+    {
+      "task_name": "test-conductivity",
+      "variation_id": 681
+    },
+    {
+      "task_name": "test-conductivity",
+      "variation_id": 682
+    },
+    {
+      "task_name": "test-conductivity",
+      "variation_id": 683
+    },
+    {
+      "task_name": "test-conductivity",
+      "variation_id": 684
+    },
+    {
+      "task_name": "use-thermometer",
+      "variation_id": 405
+    },
+    {
+      "task_name": "use-thermometer",
+      "variation_id": 406
+    },
+    {
+      "task_name": "use-thermometer",
+      "variation_id": 407
+    },
+    {
+      "task_name": "use-thermometer",
+      "variation_id": 408
+    },
+    {
+      "task_name": "use-thermometer",
+      "variation_id": 409
+    },
+    {
+      "task_name": "use-thermometer",
+      "variation_id": 410
+    },
+    {
+      "task_name": "use-thermometer",
+      "variation_id": 411
+    },
+    {
+      "task_name": "use-thermometer",
+      "variation_id": 412
+    },
+    {
+      "task_name": "use-thermometer",
+      "variation_id": 413
+    },
+    {
+      "task_name": "use-thermometer",
+      "variation_id": 414
+    }
+  ]
+}

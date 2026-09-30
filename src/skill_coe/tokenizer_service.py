@@ -1,4 +1,4 @@
-"""Loopback-only tokenizer sidecar, run in the model environment, never AppWorld."""
+"""Local tokenizer service for environments with separate dependencies."""
 import argparse
 import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer

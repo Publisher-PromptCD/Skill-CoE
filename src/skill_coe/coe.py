@@ -1,4 +1,4 @@
-"""v6 grouped experience + contrast-guided incremental skill evolution."""
+"""Batch skill evolution with contrasted rollouts and local recombination."""
 import argparse
 import copy
 import hashlib
@@ -13,7 +13,7 @@ from pathlib import Path
 from .batch_learning import BatchConfig,empty_state,render,validate_state,environmental_view,reflection_call
 from .extraction import ExtractionConfig,read_episode,request,dump
 from .grouped_probe import run as grouped_analysis,analysis_protocol
-from .coe_skills import generation_prompt,apply_patch
+from .coe_skills import generation_prompt,apply_patch,normalize_patch
 from .recombination import build_plan
 from .coe_evidence import digest,read_record,make_pairs,ActionScores,preference_losses,reward
 
@@ -49,6 +49,7 @@ def generate(model,parent,material,ids,path,cfg,seed):
     path=Path(path);path.mkdir(parents=True,exist_ok=False)
     data=dict(current_skills=parent,evidence=material,allowed_evidence_ids=sorted(ids))
     def validate(obj):
+        obj=normalize_patch(parent,obj)
         candidate=apply_patch(parent,obj,ids)
         if model.count_tokens([dict(role='user',content=render(candidate))])>cfg.playbook_tokens:
             raise ValueError('Candidate exceeds playbook budget')
@@ -108,7 +109,7 @@ def optimize(model,parent,channels,pairs,successes,out,bc,cc,scorer):
         def gain(a):return sum(w*max(x-y,0) for w,x,y in zip(subject['weights'],subject['losses'],a['losses']))
         donor=max(others,key=gain) if others else subject
         absorb_weights=[w*max(x-y,0) for w,x,y in zip(subject['weights'],subject['losses'],donor['losses'])]
-        # No complementary donor: investigate subject's weakest evidence without asserting donor superiority.
+        # Without a complementary reference, examine the weakest subject evidence.
         complementary=any(absorb_weights)
         if not complementary:absorb_weights=[w*l for w,l in zip(subject['weights'],subject['losses'])]
         retain_weights=[w*max(y-x,0) for w,x,y in zip(subject['weights'],subject['losses'],donor['losses'])]
@@ -146,7 +147,7 @@ def same_execution_config(saved, expected, original_directory):
 
 
 def reuse_analysis(source,runner,tasks,seeds,parent,out,cc):
-    """Reuse a verified collection/analysis boundary, never old generated candidates."""
+    """Reuse completed rollouts and analysis; regenerate candidates."""
     source=Path(source)
     read=lambda p:json.loads(p.read_text(encoding='utf8'))
     if read(source/'parent.json')!=parent:raise ValueError('Resume parent differs')
@@ -288,7 +289,7 @@ def update(model,runner,tasks,seeds,parent,out,bc,cc,successes=None,scoring_mode
 
 
 class ProcessRunner:
-    """One native environment and tokenizer per process; eight concurrent episodes."""
+    """Run episodes in separate processes with configurable concurrency."""
     def __init__(self,config,workers=8):self.config=config;self.workers=workers
     def __call__(self,tasks,state,out,seeds):
         out=Path(out);out.mkdir(parents=True,exist_ok=False)

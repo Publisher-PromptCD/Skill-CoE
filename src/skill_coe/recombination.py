@@ -106,9 +106,7 @@ def pack_cases(cases):
 
 
 def build_plan(model,subject,reference,roles,details,successes,previous,out,bc,cc,index,complementary):
-    # AppWorld code and API output can accumulate across fifty steps. Keep the
-    # established ALFWorld/ScienceWorld protocol unchanged; only AppWorld uses
-    # bounded, per-case evidence below.
+    # AppWorld uses bounded evidence views for each case.
     if any(isinstance(case.get('winner'),dict) and
            case['winner'].get('benchmark')=='appworld' for case in details.values()):
         return _build_plan_appworld(model,subject,reference,roles,details,successes,
@@ -143,8 +141,8 @@ def build_plan(model,subject,reference,roles,details,successes,previous,out,bc,c
             successful_experience=grounded,allowed_evidence_ids=[success['id']]),COMPARE['SUCCESS'])
         return 'SUCCESS',comparison,{success['id']}
     comparisons={'SUCCESS':[]};ids=set()
-    # Parallel independent paths, sequential grounding -> subject comparison within each.
-    # Collect in fixed order and seed by stage name, independent of completion scheduling.
+    # Ground and compare each case in sequence; process independent cases concurrently.
+    # Collect results in fixed order with stage-specific seeds.
     with ThreadPoolExecutor(max_workers=cc.recombination_workers) as pool:
         futures=[pool.submit(analyze_role,r) for r in ('ABSORB','RETAIN')]
         futures += [pool.submit(analyze_success,j,s) for j,s in enumerate(successes[-cc.success_replay:])]
@@ -236,8 +234,7 @@ Skill rule to transfer or blame; do not invent one.\n""" if not reference['state
                 subject_skills=subject['state'],grounded_reference_findings=grounded,
                 allowed_evidence_ids=[pair['id']]),compare_prompt,200+j*100)
             findings.append(dict(evidence_id=pair['id'],comparison=comparison))
-        # A short role decision, rather than concatenated per-pair analyses,
-        # enters the final plan. All pair-level findings remain auditable.
+        # Pass the role summary to the final plan; save individual case findings separately.
         summary=call(f'{role}_summary',dict(findings=findings,
             allowed_evidence_ids=sorted(ids)),
             'Combine compatible local modification suggestions for this role. '

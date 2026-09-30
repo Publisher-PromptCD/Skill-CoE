@@ -1,4 +1,4 @@
-"""Experimental task-description grouping over saved, audited trajectory views."""
+"""Task grouping and joint trajectory analysis."""
 import argparse
 import hashlib
 import json

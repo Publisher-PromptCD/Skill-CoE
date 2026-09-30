@@ -1,4 +1,4 @@
-"""Paired outcomes and fixed historical-action scores, independent of old repo."""
+"""Paired outcomes and historical-action preference scores."""
 import copy
 import hashlib
 import html
@@ -49,8 +49,11 @@ def make_pairs(records):
             if any(a[k]!=b[k] for k in ('task_id','seed','benchmark','reset_digest')):
                 raise ValueError('Contrast tasks/seeds/initial observations differ')
             audit.append(dict(left=a['id'],right=b['id'],rewards=[a['reward'],b['reward']]))
+            if not a['decisions'] or not b['decisions']:
+                audit[-1].update(status='skipped',reason='no_scoreable_actions',
+                                 unscoreable_records=[r['id'] for r in (a,b) if not r['decisions']])
+                continue
             if a['reward']==b['reward']:continue
-            if not a['decisions'] or not b['decisions']:raise ValueError('Non-tie has no scoreable actions')
             w,l=(a,b) if a['reward']>b['reward'] else (b,a)
             pairs.append(dict(id=f'p{len(pairs):04d}',task_id=a['task_id'],winner=w,loser=l))
     return pairs,audit
