@@ -1,4 +1,6 @@
 """Batch skill evolution with contrasted rollouts and local recombination."""
+from .failures import GenerationError
+from .context import ContextOverflow
 import argparse
 import copy
 import hashlib
@@ -31,7 +33,7 @@ class CoEConfig:
     recombination_retry_tokens:int=8192
     recombination_workers:int=4
     def __post_init__(self):
-        if self.plan_protocol not in ("independent","legacy"):raise ValueError("Invalid plan protocol")
+        if self.plan_protocol not in ("independent","legacy","plain"):raise ValueError("Invalid plan protocol")
         for name in ('inner_proposals','evidence_per_role','score_steps','score_workers','success_replay','success_cache','recombination_output_tokens','recombination_retry_tokens','recombination_workers'):
             if type(getattr(self,name)) is not int or getattr(self,name)<1:raise ValueError('Invalid '+name)
         if self.recombination_retry_tokens<self.recombination_output_tokens:raise ValueError('Retry budget cannot shrink')
@@ -91,17 +93,24 @@ def evidence(pair):
 
 def optimize(model,parent,channels,pairs,successes,out,bc,cc,scorer):
     out=Path(out);out.mkdir(parents=True,exist_ok=False)
-    if not pairs:
-        chosen=next((channels[k] for k in ('A','B') if new_candidate(channels[k],parent)),None)
-        if chosen is None:raise ValueError('No preference and no effective native update')
-        dump(out/'selection.json',dict(reason='no_pair_native_update',channel='A' if chosen is channels['A'] else 'B'))
-        return chosen
-    archive=[]
-    def add(name,state):
-        if any(render(x['state'])==render(state) for x in archive):return next(x for x in archive if render(x['state'])==render(state))
-        row=dict(name=name,state=state,**preference_losses(render(state),render(parent),pairs,scorer))
-        archive.append(row);dump(out/'archive.json',archive);return row
-    for name,state in [('O',parent),*channels.items()]:add(name,state)
+    def native(reason):
+        chosen=next(((k,v) for k,v in channels.items() if new_candidate(v,parent)),None)
+        dump(out/'selection.json',dict(reason=reason,channel=chosen[0] if chosen else 'O',
+                                       updated=chosen is not None))
+        return chosen[1] if chosen else copy.deepcopy(parent)
+    if not pairs:return native('no_pair_native_update')
+    original_pairs=pairs;archive=[]
+    for name,state in [('O',parent),*channels.items()]:
+        if not any(render(x['state'])==render(state) for x in archive):archive.append(dict(name=name,state=state))
+    def refresh():
+        valid=scorer.prepare([render(x['state']) for x in archive],original_pairs)
+        if valid:
+            for row in archive:row.update(preference_losses(render(row['state']),render(parent),valid,scorer))
+        dump(out/'archive.json',archive)
+        return valid
+    pairs=refresh()
+    if not pairs:return native('no_scoreable_pair_native_update')
+    if not any(x['name']!='O' for x in archive):return native('no_effective_candidate')
     subject=min(recombination_pool(archive),key=lambda x:x['loss']);rng=random.Random(cc.seed);previous=None
     details={p['id']:evidence(p) for p in pairs};iterations=[]
     for i in range(cc.inner_proposals):
@@ -109,16 +118,23 @@ def optimize(model,parent,channels,pairs,successes,out,bc,cc,scorer):
         def gain(a):return sum(w*max(x-y,0) for w,x,y in zip(subject['weights'],subject['losses'],a['losses']))
         donor=max(others,key=gain) if others else subject
         absorb_weights=[w*max(x-y,0) for w,x,y in zip(subject['weights'],subject['losses'],donor['losses'])]
-        # Without a complementary reference, examine the weakest subject evidence.
         complementary=any(absorb_weights)
         if not complementary:absorb_weights=[w*l for w,l in zip(subject['weights'],subject['losses'])]
         retain_weights=[w*max(y-x,0) for w,x,y in zip(subject['weights'],subject['losses'],donor['losses'])]
         roles=dict(ABSORB=sample(pairs,absorb_weights,cc.evidence_per_role,rng),
                    RETAIN=sample(pairs,retain_weights,cc.evidence_per_role,rng))
-        plan,selected_ids=build_plan(model,subject,donor,roles,details,successes,previous,
-                                     out,bc,cc,i,complementary)
-        state=generate(model,subject['state'],dict(modification_plan=plan),selected_ids,out/f'C{i+1}',bc,cc.seed+3000+i)
-        candidate=add(f'C{i+1}',state)
+        try:
+            plan,selected_ids=build_plan(model,subject,donor,roles,details,successes,previous,
+                                         out,bc,cc,i,complementary)
+            state=generate(model,subject['state'],dict(modification_plan=plan),selected_ids,out/f'C{i+1}',bc,cc.seed+3000+i)
+        except (GenerationError,ContextOverflow) as exc:
+            iterations.append(dict(candidate=f'C{i+1}',status='skipped',error=str(exc)))
+            dump(out/'iterations.json',iterations);continue
+        candidate=next((x for x in archive if render(x['state'])==render(state)),None)
+        if candidate is None:
+            candidate=dict(name=f'C{i+1}',state=state);archive.append(candidate)
+        pairs=refresh()
+        if not pairs:return native('no_scoreable_pair_native_update')
         changes=[dict(id=p['id'],old=a,new=b,direction='improved' if b<a else 'worsened' if b>a else 'unchanged')
                  for p,a,b in zip(pairs,subject['losses'],candidate['losses'])]
         selected_changes=sorted(changes,key=lambda x:abs(x['new']-x['old']),reverse=True)[:2*cc.evidence_per_role]
@@ -128,7 +144,9 @@ def optimize(model,parent,channels,pairs,successes,out,bc,cc,scorer):
             absorb=[p['id'] for p in roles['ABSORB']],retain=[p['id'] for p in roles['RETAIN']],pair_changes=changes))
         dump(out/'iterations.json',iterations)
         if candidate['loss']<subject['loss'] and new_candidate(candidate['state'],parent):break
-    chosen=select_new(archive,parent)
+    eligible=[x for x in archive if new_candidate(x['state'],parent)]
+    if not eligible:return native('no_effective_candidate')
+    chosen=min(eligible,key=lambda x:x['loss'])
     dump(out/'selection.json',dict(name=chosen['name'],loss=chosen['loss'],reason='new_candidate_min_loss'))
     return chosen['state']
 
@@ -166,7 +184,7 @@ def reuse_analysis(source,runner,tasks,seeds,parent,out,cc):
         if rec['task']!=tasks[i] or rec['seed']!=seeds[i]:raise ValueError('Resume task/seed differs')
     groups=read(source/'analysis/grouping.json')['groups']
     analyses=[read(source/f'analysis/group_{i:03d}_analysis.json') for i in range(len(groups))]
-    if any(a['group']!=g or not a.get('analysis') for a,g in zip(analyses,groups)):
+    if any(a['group']!=g or (not a.get('analysis') and a.get('status')!='skipped') for a,g in zip(analyses,groups)):
         raise ValueError('Resume group analysis differs')
     hashes={str(p.relative_to(source)):digest(read(p)) for p in (source/'analysis').glob('*.json')}
     for name in ('ordinary','views','analysis'):shutil.copytree(source/name,out/name)
@@ -226,7 +244,7 @@ def update(model,runner,tasks,seeds,parent,out,bc,cc,successes=None,scoring_mode
         views=out/'views';views.mkdir()
         for i,p in enumerate(ordinary):dump(views/f'e{i:03d}_view.json',environmental_view(read_episode(p,f'e{i:03d}'),8000))
         analyses=grouped_analysis(model,views,out/'analysis',bc,cc.seed,analyses_only=True)
-    material=[dict(id=f'g{i:03d}',**a) for i,a in enumerate(analyses)];ids={x['id'] for x in material}
+    material=[dict(id=f'g{i:03d}',**a) for i,a in enumerate(analyses) if a.get('analysis')];ids={x['id'] for x in material}
     # Shared trajectory interpretation; reconstruction never sees parent Skills.
     channels={}
     for name,base in [('A',parent),('B',empty_state())]:
@@ -242,7 +260,10 @@ def update(model,runner,tasks,seeds,parent,out,bc,cc,successes=None,scoring_mode
             if candidate!=apply_patch(base,delta,ids):raise ValueError('Saved candidate does not match its edit')
             shutil.copytree(source/name,out/name);channels[name]=candidate
         else:
-            channels[name]=generate(model,base,dict(group_analyses=material,channel=name),ids,out/name,bc,cc.seed+500+(name=='B'))
+            try:
+                channels[name]=generate(model,base,dict(group_analyses=material,channel=name),ids,out/name,bc,cc.seed+500+(name=='B'))
+            except (GenerationError,ContextOverflow) as exc:
+                dump(out/name/'failure.json',dict(status='skipped',error=str(exc)))
     records={}
     for name,state in [('O',parent),*channels.items()]:
         if name=='O':
@@ -326,7 +347,7 @@ def task_identity(task):
 
 
 def learn(model,runner,batches,validation,test,out,bc,cc,initial=None,scoring_model=None,
-          initial_test=True,final_test=True,reuse_first_batch=None,resume_run=None):
+          initial_test=True,final_test=True,reuse_first_batch=None,resume_run=None,allow_plan_protocol_change=False):
     state=copy.deepcopy(initial if initial is not None else empty_state());validate_state(state)
     if not batches or not validation or (not test and (final_test or (initial_test and state['entries']))) or any(not b or len(b)>bc.batch_size for b in batches):raise ValueError('Empty/oversized datasets')
     sets=[{task_identity(t) for t in x} for x in ([t for b in batches for t in b],validation,test)]
@@ -348,14 +369,18 @@ def learn(model,runner,batches,validation,test,out,bc,cc,initial=None,scoring_mo
             old_cc=CoEConfig(**protocol['coe'])
             allowed={'recombination_output_tokens','recombination_retry_tokens','recombination_workers'}
             if old_cc.plan_protocol!=cc.plan_protocol:
-                if (source/'curve.json').exists() and read(source/'curve.json'):
-                    raise ValueError('Cannot change scoring protocol after completed updates')
+                if (source/'curve.json').exists() and read(source/'curve.json') and not allow_plan_protocol_change:
+                    raise ValueError('Use --allow-plan-protocol-change to explicitly migrate an existing run')
                 allowed.add('plan_protocol')
             if any(asdict(old_cc)[k]!=v for k,v in asdict(cc).items() if k not in allowed):
                 raise ValueError('Resume scoring/learning configuration differs')
             if read(source/'state_initial.json')!=state:raise ValueError('Resume initial state differs')
             curve=read(source/'curve.json') if (source/'curve.json').exists() else []
             start=len(curve)
+            if old_cc.plan_protocol!=cc.plan_protocol:
+                dump(out/'protocol_migration.json',dict(previous=old_cc.plan_protocol,current=cc.plan_protocol,
+                    first_affected_batch=start,completed_batches_preserved=start,
+                    historical_metrics_unchanged=True,unfinished_batch_scores_recomputed=True))
             if start>=len(batches) or [r['batch'] for r in curve]!=list(range(start)):
                 raise ValueError('Expected contiguous completed prefix and unfinished batch')
             for i,row in enumerate(curve):
@@ -396,9 +421,14 @@ def learn(model,runner,batches,validation,test,out,bc,cc,initial=None,scoring_mo
                           and all((old_batch/name/'state.json').exists() for name in ('A','B')))
             dump(out/'status.json',dict(status='running',completed_batches=len(curve),active_batch=i,
                                        stage='recombination_resume' if prepared else 'learning'))
-            state,cache=update(model,runner,tasks,seeds,state,out/f'batch_{i:03d}',bc,replace(cc,seed=cc.seed+i*10000),cache,scoring_model,
-                               reuse_from=old_batch if old_batch else reuse_first_batch if i==0 else None,
-                               reuse_prepared=prepared)
+            try:
+                state,cache=update(model,runner,tasks,seeds,state,out/f'batch_{i:03d}',bc,replace(cc,seed=cc.seed+i*10000),cache,scoring_model,
+                                   reuse_from=old_batch if old_batch else reuse_first_batch if i==0 else None,
+                                   reuse_prepared=prepared)
+            except (GenerationError,ContextOverflow) as exc:
+                failed=out/f'batch_{i:03d}'
+                dump(failed/'state.json',state);dump(failed/'success_cache.json',cache)
+                dump(failed/'status.json',dict(status='complete',updated=False,update_error=str(exc)))
             dump(out/'current.json',state)
             score=evaluate(runner,validation,state,out/f'validation_{i:03d}',cc.seed)
             if best_score is None or score>best_score:
@@ -419,6 +449,7 @@ def main():
     p.add_argument('--output',required=True);p.add_argument('--state')
     p.add_argument('--reuse-first-batch',help='Reuse verified first-batch collection and analysis in a new output directory')
     p.add_argument('--resume-run',help='Copy completed batches and resume prepared candidates at recombination in a new output directory')
+    p.add_argument('--allow-plan-protocol-change',action='store_true',help='Record an explicit scoring protocol change at the unfinished batch')
     a=p.parse_args()
     config=json.loads(Path(a.config).read_text());data=json.loads(Path(a.data).read_text())
     initial=json.loads(Path(a.state).read_text()) if a.state else None
@@ -426,6 +457,6 @@ def main():
     learn(ChatModel(**config.get('learning_model',config['model'])),ProcessRunner(execution,config.get('workers',8)),
           data['batches'],data['validation'],data.get('test',[]),a.output,BatchConfig(**config.get('learning',{})),
           CoEConfig(**config.get('coe',{})),initial,ChatModel(**config['model']),
-          reuse_first_batch=a.reuse_first_batch,resume_run=a.resume_run,**config.get('evaluation',{}))
+          reuse_first_batch=a.reuse_first_batch,resume_run=a.resume_run,allow_plan_protocol_change=a.allow_plan_protocol_change,**config.get('evaluation',{}))
 
 if __name__=='__main__':main()

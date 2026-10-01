@@ -1,4 +1,5 @@
 """Batch reflection and append-only playbook updates."""
+from .failures import GenerationError
 import argparse
 import copy
 import hashlib
@@ -220,7 +221,7 @@ def reflection_call(model,payload,path,cfg,seed,system_prompt,retry_output_token
         response=model.generate(messages,max_tokens=budget,seed=seed+attempt)
         dump(prefix.with_suffix('.response.json'),asdict(response))
         if response.finish_reason=='stop' and response.text.strip():return response.text
-    raise ValueError('Reflection incomplete after bounded attempts')
+    raise GenerationError('Reflection incomplete after bounded attempts')
 
 def update_batch(model,directories,state,output,cfg=None,seed=42,metadata=None):
     cfg=cfg or BatchConfig();validate_state(state); model=LockedModel(model)

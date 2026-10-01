@@ -1,4 +1,6 @@
 """Separate reference grounding, subject compatibility, and final local planning."""
+from .failures import GenerationError
+from .context import ContextOverflow
 import copy
 import json
 from dataclasses import replace
@@ -140,16 +142,21 @@ def build_plan(model,subject,reference,roles,details,successes,previous,out,bc,c
         comparison=call(f'SUCCESS_{j}_compare',dict(subject_skills=subject['state'],
             successful_experience=grounded,allowed_evidence_ids=[success['id']]),COMPARE['SUCCESS'])
         return 'SUCCESS',comparison,{success['id']}
-    comparisons={'SUCCESS':[]};ids=set()
+    comparisons={'ABSORB':'No usable analysis.', 'RETAIN':'No usable analysis.', 'SUCCESS':[]};ids=set()
     # Ground and compare each case in sequence; process independent cases concurrently.
     # Collect results in fixed order with stage-specific seeds.
     with ThreadPoolExecutor(max_workers=cc.recombination_workers) as pool:
         futures=[pool.submit(analyze_role,r) for r in ('ABSORB','RETAIN')]
         futures += [pool.submit(analyze_success,j,s) for j,s in enumerate(successes[-cc.success_replay:])]
-        for future in futures:
-            role,comparison,evidence_ids=future.result();ids.update(evidence_ids)
+        for task_index,future in enumerate(futures):
+            try:role,comparison,evidence_ids=future.result()
+            except (GenerationError,ContextOverflow) as exc:
+                dump(out/f'{index}_analysis_failure_{task_index}.json',dict(status='skipped',error=str(exc)))
+                continue
+            ids.update(evidence_ids)
             if role=='SUCCESS':comparisons['SUCCESS'].append(comparison)
             else:comparisons[role]=comparison
+    if not ids:raise GenerationError('No usable recombination analysis')
     payload=dict(subject=subject['state'],proposals=comparisons,allowed_evidence_ids=sorted(ids))
     if previous:
         payload['previous_attempt']=dict(conclusion='Previous candidate did not improve fixed aggregate score.',
@@ -262,12 +269,16 @@ Skill rule to transfer or blame; do not invent one.\n""" if not reference['state
             COMPARE['SUCCESS'],450+j*100)
         return 'SUCCESS',dict(evidence_id=success['id'],comparison=comparison),{success['id']}
 
-    comparisons={'SUCCESS':[]};ids=set()
+    comparisons={'ABSORB':'No usable analysis.', 'RETAIN':'No usable analysis.', 'SUCCESS':[]};ids=set()
     with ThreadPoolExecutor(max_workers=cc.recombination_workers) as pool:
         futures=[pool.submit(analyze_role,r) for r in ('ABSORB','RETAIN')]
         futures += [pool.submit(analyze_success,j,s) for j,s in enumerate(successes[-cc.success_replay:])]
-        for future in futures:
-            role,comparison,evidence_ids=future.result();ids.update(evidence_ids)
+        for task_index,future in enumerate(futures):
+            try:role,comparison,evidence_ids=future.result()
+            except (GenerationError,ContextOverflow) as exc:
+                dump(out/f'{index}_analysis_failure_{task_index}.json',dict(status='skipped',error=str(exc)))
+                continue
+            ids.update(evidence_ids)
             if role=='SUCCESS':comparisons['SUCCESS'].append(comparison)
             else:comparisons[role]=comparison
     if comparisons['SUCCESS']:
@@ -278,6 +289,7 @@ Skill rule to transfer or blame; do not invent one.\n""" if not reference['state
             'Keep supported prerequisites and evidence IDs; omit duplicate or '
             'already-covered advice. Do not infer that the subject generated '
             'these trajectories.\n',900,output_tokens=2048)
+    if not ids:raise GenerationError('No usable recombination analysis')
     payload=dict(subject=subject['state'],proposals=comparisons,
                  allowed_evidence_ids=sorted(ids))
     if previous:

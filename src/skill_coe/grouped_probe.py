@@ -1,4 +1,6 @@
 """Task grouping and joint trajectory analysis."""
+from .failures import GenerationError
+from .context import ContextOverflow
 import argparse
 import hashlib
 import json
@@ -178,8 +180,14 @@ def run(model, source, output, cfg, seed, fixed_groups=None, analyses_only=False
             row=dict(group=g,evidence_accounts=facts,analysis=text,
                      analysis_protocol=protocol)
             dump(out/f'group_{i:03d}_analysis.json',row);return row
+        def safe_analyze(item):
+            try:return analyze(item)
+            except (GenerationError,ContextOverflow) as exc:
+                i,g=item;row=dict(group=g,status='skipped',error=str(exc),analysis=None)
+                dump(out/f'group_{i:03d}_analysis.json',row);return row
         with ThreadPoolExecutor(max_workers=cfg.reflection_workers) as pool:
-            analyses=list(pool.map(analyze,enumerate(groups)))
+            analyses=list(pool.map(safe_analyze,enumerate(groups)))
+        if not any(a.get('analysis') for a in analyses):raise GenerationError('No usable group analysis')
         if analyses_only:
             dump(out/'status.json',dict(status='complete',episodes=len(views),groups=len(groups),stage='analysis_only'))
             return analyses

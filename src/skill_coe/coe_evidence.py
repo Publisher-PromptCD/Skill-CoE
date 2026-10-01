@@ -1,4 +1,5 @@
 """Paired outcomes and historical-action preference scores."""
+from .failures import GenerationError
 import copy
 import hashlib
 import html
@@ -45,6 +46,7 @@ def make_pairs(records):
     pairs=[];audit=[]
     for index in range(len(records['O'])):
         for left,right in [('A','B'),('A','O'),('B','O')]:
+            if left not in records or right not in records:continue
             a,b=records[left][index],records[right][index]
             if any(a[k]!=b[k] for k in ('task_id','seed','benchmark','reset_digest')):
                 raise ValueError('Contrast tasks/seeds/initial observations differ')
@@ -120,71 +122,100 @@ def parse_scoring_plan(text):
 class ActionScores:
     def __init__(self,model,output,context_tokens=65536,seed=42,workers=8,reuse_existing=False,plan_protocol="independent"):
         self.model=model;self.output=Path(output);self.output.mkdir(parents=True,exist_ok=True)
-        self.context_tokens=context_tokens;self.seed=seed;self.cache={};self.masks={};self.lock=Lock();self.workers=workers
-        if plan_protocol not in ("independent","legacy"):raise ValueError("Unknown plan protocol")
-        self.plan_protocol=plan_protocol
-        self.reuse_existing=reuse_existing;self.reused_actions=0
+        self.context_tokens=context_tokens;self.seed=seed;self.lock=Lock();self.workers=workers
+        if plan_protocol not in ("independent","legacy","plain"):raise ValueError("Unknown plan protocol")
+        self.plan_protocol=plan_protocol;self.reuse_existing=reuse_existing
+        self.values={};self.excluded=set();self.masks={};self.reused_actions=0
 
-    def score(self,text,record):
+    def collect(self,text,record):
         key=digest([text,record['id']])
-        if key in self.cache:return self.cache[key]
+        if key in self.values:return
         def one(decision):
+            position=(record['id'],decision['step'])
+            if position in self.excluded:return decision['step'],None
             messages=candidate_messages(decision['messages'],text)
-            # The current target action is never provided to the planner.
             seed=int(digest([self.seed,record['id'],decision['step']])[:8],16)%2147483647
-            attempts=[];plan=None
             path=self.output/(digest([key,decision['step']])+'.json')
-            if self.reuse_existing and path.exists() and self.plan_protocol == "independent":
+            conditions=dict(protocol=self.plan_protocol,messages=messages,action=decision['action'],seed=seed,
+                            context_tokens=self.context_tokens)
+            if self.reuse_existing and path.exists():
                 saved=json.loads(path.read_text(encoding='utf8'))
-                if 'score' in saved:
-                    attempt=saved['attempts'][-1]
-                    if (saved.get('scoring_messages')!=messages or saved.get('target_action')!=decision['action']
-                        or attempt['seed']!=seed or attempt['messages']!=planning_messages(messages,retry=len(saved['attempts'])>1)
-                        or parse_scoring_plan(attempt['response'])!=saved.get('plan') or attempt['finish_reason']!='stop'):
-                        raise ValueError('Saved scoring conditions differ; refuse cache reuse')
-                    value=saved['score']
-                    if not value['token_ids'] or not math.isfinite(value['total_logprob']):raise ValueError('Invalid saved score')
-                    with self.lock:
-                        maskkey=(record['id'],decision['step'])
-                        if maskkey in self.masks and self.masks[maskkey]!=value['token_ids']:raise ValueError('Saved action masks differ')
-                        self.masks[maskkey]=value['token_ids'];self.reused_actions+=1
-                        dump(self.output/'reuse_stats.json',dict(reused_actions=self.reused_actions))
-                    return value
+                if saved.get('conditions')==conditions and 'score' in saved:
+                    self.reused_actions+=1
+                    return decision['step'],saved['score']
+            attempts=[];plan=None
             for attempt in range(3 if self.plan_protocol=='legacy' else 2):
-                kwargs={};attempt_seed=seed
+                kwargs={}
                 if self.plan_protocol=='legacy':
                     from .legacy_planning import planning_request,parse_response
                     inputs,budget,kwargs=planning_request(messages,attempt)
-                    if attempt==2:attempt_seed=int(digest([seed,'plan_format_retry',attempt])[:8],16)%(2**31)
                 else:
-                    inputs=planning_messages(messages,retry=bool(attempt))
-                    budget=512 if not attempt else 768
+                    inputs=planning_messages(messages,retry=bool(attempt));budget=512 if not attempt else 768
+                    if self.plan_protocol=='plain':
+                        inputs[0]['content']=PLAN_SYSTEM.replace(
+                            'Return only one <plan>...</plan> block. Do not output an action, JSON, or detailed reasoning.',
+                            'Return the next-step plan as concise plain text. Do not output executable actions, JSON, markup, or a detailed reasoning trace.')
+                        if attempt:inputs[0]['content']+=' The previous generation was incomplete. Give only a complete next-step intention.'
                 with self.lock:count=self.model.count_tokens(inputs)
-                if count+budget>self.context_tokens:raise ValueError('Plan context overflow')
-                answer=self.model.generate(inputs,max_tokens=budget,seed=attempt_seed,**kwargs)
-                attempts.append(dict(messages=inputs,seed=attempt_seed,response=answer.text,finish_reason=answer.finish_reason,plan_protocol=self.plan_protocol,request_options=kwargs))
-                dump(path,dict(attempts=attempts))
+                if count+budget>self.context_tokens:
+                    attempts.append(dict(error='plan_context_overflow'));break
+                try:answer=self.model.generate(inputs,max_tokens=budget,seed=seed+attempt,**kwargs)
+                except GenerationError as exc:
+                    attempts.append(dict(error=str(exc)));continue
+                attempts.append(dict(messages=inputs,seed=seed+attempt,response=answer.text,
+                                     finish_reason=answer.finish_reason,request_options=kwargs))
+                dump(path,dict(conditions=conditions,attempts=attempts))
                 if answer.finish_reason!='stop':continue
-                value=parse_response(answer.text,attempt) if self.plan_protocol=="legacy" else parse_scoring_plan(answer.text)
-                if value is not None:
-                    plan=value;break
-            if plan is None:raise ValueError('Invalid candidate-owned plan; scoring position not dropped')
-            audit=dict(attempts=attempts)
+                if self.plan_protocol=='plain':
+                    value=answer.text.strip()
+                    if not value or not any(c.isalnum() for c in value):value=None
+                    # Accept a wrapped plan without reading a following action body.
+                    elif '<plan>' in value:value=parse_scoring_plan(value)
+                    elif any(t in value for t in ('<action','```')):value=None
+                else:value=parse_response(answer.text,attempt) if self.plan_protocol=='legacy' else parse_scoring_plan(answer.text)
+                if value is not None:plan=value;break
+            if plan is None:
+                dump(path,dict(conditions=conditions,attempts=attempts,status='excluded',reason='no_complete_plan'))
+                return decision['step'],None
             prefix='<plan>'+html.escape(plan,quote=False)+'</plan>\n<action>'
-            value=self.model.score_action(messages,prefix,decision['action'],self.context_tokens)
-            maskkey=(record['id'],decision['step'])
-            if maskkey in self.masks and self.masks[maskkey]!=value['token_ids']:
-                raise ValueError('Candidate changed target action token mask')
-            self.masks[maskkey]=value['token_ids']
-            if not value['token_ids'] or not math.isfinite(value['total_logprob']):raise ValueError('Invalid action score')
-            audit.update(score=value,scoring_messages=messages,plan=plan,target_action=decision['action']);dump(path,audit)
-            return value
+            from .context import ContextOverflow
+            try:value=self.model.score_action(messages,prefix,decision['action'],self.context_tokens)
+            except ContextOverflow as exc:
+                dump(path,dict(conditions=conditions,attempts=attempts,status='excluded',reason=str(exc)))
+                return decision['step'],None
+            if not value['token_ids'] or not math.isfinite(value['total_logprob']):
+                raise ValueError('Invalid action scoring service result')
+            dump(path,dict(conditions=conditions,attempts=attempts,score=value,plan=plan,
+                           scoring_messages=messages,target_action=decision['action']))
+            return decision['step'],value
         with ThreadPoolExecutor(max_workers=self.workers) as pool:
-            values=list(pool.map(one,record['decisions']))
-        if not values:raise ValueError('Empty score record')
-        score=sum(x['total_logprob'] for x in values)/sum(len(x['token_ids']) for x in values)
-        self.cache[key]=score
-        return score
+            values=dict(pool.map(one,record['decisions']))
+        for step,value in values.items():
+            position=(record['id'],step)
+            if value is None:self.excluded.add(position);continue
+            if position in self.masks and self.masks[position]!=value['token_ids']:
+                raise ValueError('Candidate changed target action token mask')
+            self.masks[position]=value['token_ids']
+        self.values[key]=values
+
+    def prepare(self,texts,pairs):
+        records={r['id']:r for p in pairs for r in (p['winner'],p['loser'])}
+        for text in dict.fromkeys(texts):
+            for record in records.values():self.collect(text,record)
+        valid=[p for p in pairs if all(any((r['id'],d['step']) not in self.excluded
+                for d in r['decisions']) for r in (p['winner'],p['loser']))]
+        dump(self.output/'coverage.json',dict(excluded_positions=[list(x) for x in sorted(self.excluded)],
+            input_pairs=len(pairs),valid_pairs=len(valid),excluded_pairs=[p['id'] for p in pairs if p not in valid],
+            candidates=len(set(texts)),reused_actions=self.reused_actions,
+            valid_positions={k:sum((k,d['step']) not in self.excluded for d in r['decisions']) for k,r in records.items()}))
+        return valid
+
+    def score(self,text,record):
+        self.collect(text,record)
+        values=[v for step,v in self.values[digest([text,record['id']])].items()
+                if v is not None and (record['id'],step) not in self.excluded]
+        if not values:raise ValueError('Prepare common scoring evidence before comparing candidates')
+        return sum(v['total_logprob'] for v in values)/sum(len(v['token_ids']) for v in values)
 
 
 def preference_losses(text,parent,pairs,scorer):

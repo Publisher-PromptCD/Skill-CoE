@@ -1,4 +1,5 @@
 """Extract Skills from saved trajectories and their evidence."""
+from .failures import GenerationError
 import argparse
 import hashlib
 import json
@@ -222,7 +223,7 @@ def request(model, system, payload, validate, path, input_limit, output_limit, c
         except (ValueError,KeyError,TypeError) as exc:
             error=str(exc)
             dump(prefix.with_suffix('.error.json'),dict(error=error))
-    raise ValueError('Invalid extraction after bounded format attempts: '+error)
+    raise GenerationError('Invalid extraction after bounded format attempts: '+error)
 
 
 def extract_batch(model, directories, output, cfg=None, seed=42, metadata=None, reuse_analyses_from=None):

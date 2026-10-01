@@ -1,4 +1,6 @@
 """OpenAI-compatible local inference, with caller-supplied tokenizer chat template."""
+from .failures import GenerationError
+from .context import ContextOverflow
 import json
 import os
 from threading import RLock
@@ -62,7 +64,7 @@ class ChatModel:
         choice = result['choices'][0]
         text = choice['message']['content']
         if not isinstance(text, str):
-            raise ValueError("Model returned no text content")
+            raise GenerationError("Model returned no text content")
         return Generation(text, choice.get('finish_reason', 'unknown'), result.get('usage', {}))
 
     def score_action(self, messages, prefix, action, context_tokens=65536):
@@ -75,7 +77,7 @@ class ChatModel:
         else:
             chat,ids,mask=self._local_score_tokens(messages,prefix,action)
         if len(chat)+len(ids)+1 > context_tokens:
-            raise ValueError('Scoring exceeds context; no positions dropped')
+            raise ContextOverflow('Scoring exceeds context')
         body = dict(model=self.name, prompt=chat+ids, max_tokens=1, temperature=0.,
                     echo=True, logprobs=1, prompt_logprobs=1, add_special_tokens=False)
         headers={'Content-Type':'application/json'}

@@ -61,7 +61,7 @@
     "recombination_workers": 4,
     "recombination_output_tokens": 6144,
     "recombination_retry_tokens": 8192,
-    "plan_protocol": "legacy"
+    "plan_protocol": "plain"
   },
   "evaluation": {
     "initial_test": false,
